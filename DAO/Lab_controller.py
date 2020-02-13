@@ -11,8 +11,8 @@ class Lab_controller:
             return self.Update_by_id(obj)
         else:
             cursor = self.con.cursor()
-            cursor.execute("insert into Labs (LabID, SubjectID, LabNumber, IsMaked) "
-                             "values (%s, %s, %s, %s)", (obj.LabID, obj.SubID, obj.Number, obj.IsMaked))
+            cursor.execute("insert into Labs (SubjectID, LabNumber, IsMaked) "
+                             "values (%s, %s, %s)", (obj.SubID, obj.Number, obj.IsMaked))
             self.con.commit()
             # self.con.close()
             return cursor.rowcount

@@ -7,8 +7,8 @@ class Subject_controller:
 
     def Add(self, obj : Subject) -> int:
         cursor = self.con.cursor()
-        cursor.execute("insert into Subjects (SubjectID, SubjectName, LabCount) "
-                         "values (%s, %s, %s)", (obj.SubID, obj.Name, obj.LabCount))
+        cursor.execute("insert into Subjects (SubjectName, LabCount) "
+                         "values (%s, %s)", (obj.Name, obj.LabCount))
         self.con.commit()
         # self.con.close()
         return cursor.rowcount

@@ -13,7 +13,7 @@ class PyQt5_view(QWidget):
         super(PyQt5_view, self).__init__(parent)
         # self.setStyleSheet("background-color: "+ self.colors[3])
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setGeometry(780, 400, 550, 250)
+        self.setGeometry(770, 400, 510, 250)
         self.setWindowTitle("Lab trecker")
         self.setWindowOpacity(0.8)
         # self.setWindowIcon(QIcon('img/logo.png'))
@@ -33,6 +33,7 @@ class PyQt5_view(QWidget):
         self.y = 100
         self.margin = 120
         self.colors = ['#e0f2ff', "#1c2c1e", "#4b674a", "#060b0d"]
+        self.sqare_colors = [[235, 237, 240], [198, 228, 139], [123, 201, 111], [35, 154, 59], [25, 97, 39]]
 
         self.qle = QPushButton("X", self)
         self.qle.move(475, 5)
@@ -47,11 +48,9 @@ class PyQt5_view(QWidget):
         self.GetSquares()
         self.smap.mapped.connect(self.on_click)
 
-
         self.show()
 
     def GetSquares(self):
-
         for i in range(0, self.subject_names.__len__()):
 
             c1 = i * self.x * 1.2 + self.x
@@ -62,17 +61,20 @@ class PyQt5_view(QWidget):
 
                 c2 = j * self.x * 1.2 + self.x
                 label = self.Get_label(str(int(self.lab_maiking[i][j])),
-                               self.colors[2], self.margin + 20 + c2, c1, self.x, self.x, True)
+                              None, self.margin + 20 + c2, c1, self.x, self.x, True)
+
 
                 label.clicked.connect(self.smap.map)  # соединить
                 self.smap.setMapping(label, self.square_id)
 
                 label.x = i
                 label.y = j
+                label.color = self.get_color(self.lab_maiking[i][j])
+
+                self.set_label_color(label)
 
                 self.labels.append(label)
                 self.square_id += 1
-
 
     def Get_label(self, text, color, x, y, width, height, aline) -> ClickLabel:
         label_sq = ClickLabel(self)
@@ -88,27 +90,45 @@ class PyQt5_view(QWidget):
     @pyqtSlot(int)
     def on_click(self, id):
         # print(str(id) + "  " + str(self.labels[id + 1].x) + "," + str(self.labels[id + 1].y))
-        self.labels[id + 1].setStyleSheet("background-color: blue")
-
         if(self.ctrl_press):
             prosent_add_maiking = -self.prosent_add_maiking
         else:
             prosent_add_maiking = self.prosent_add_maiking
 
-        if(self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y] < 100):
-            self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y] += prosent_add_maiking
-        self.labels[id + 1].setText(str(self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y]))
 
-        self.update()
+        self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y] += prosent_add_maiking
+        z = self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y]
 
-        #обновление бд
-        self.table.Update_square(self.labels[id + 1].y,
-                                 self.subject_names[self.labels[id + 1].x].Name,
-                                 prosent_add_maiking)
+        if(100 >= z >= 0):
+            self.labels[id + 1].setText(str(self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y]))
+            self.labels[id + 1].color = \
+                self.get_color(self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y])
+            self.set_label_color(self.labels[id + 1])
+            self.update()
+
+            self.table.Update_square(self.labels[id + 1].y,
+                                     self.subject_names[self.labels[id + 1].x].Name,
+                                     prosent_add_maiking)
+
+        else:
+            self.lab_maiking[self.labels[id + 1].x][self.labels[id + 1].y] -= prosent_add_maiking
 
         # self.subject_names, self.max_lab_count, self.lab_maiking = self.table.Make_table()
 
+    def set_label_color(self, label):
+        strs = "background-color: rgb(" + str(label.color[0]) + \
+               ", " + str(label.color[1]) + \
+               ", " + str(label.color[2]) + ")"
 
+        label.setStyleSheet(strs)
+
+    def get_color(self, count) -> list:
+        l = []
+        m = int(count/20)
+        if(m >= self.sqare_colors.__len__()):
+            m = self.sqare_colors.__len__() - 1
+        l = self.sqare_colors[m]
+        return l
 
     # вызывается при нажатии кнопки мыши
     def mousePressEvent(self, event):
