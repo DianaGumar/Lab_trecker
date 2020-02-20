@@ -1,5 +1,5 @@
 
-class Lab():
+class Lab:
     def __init__(self, LabID, SubID, Number, IsMaked):
         self.LabID = LabID
         self.Number = Number

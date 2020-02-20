@@ -10,6 +10,7 @@ class ClickLabel(QLabel):
     y = 0
 
     color = []
+    color_font = "white"
 
     def __init__(self, *args):
         QLabel.__init__(self, *args)

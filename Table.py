@@ -61,8 +61,8 @@ class Table:
         sc.Add(Subject(1, name, lab_count))
         sub = sc.Get_by_Name(name)
 
-        for i in range(lab_count):
-            lc.Add(Lab(1,sub.SubID, i,0))
+        for i in range(0, int(lab_count)):
+            lc.Add(Lab(1,sub.SubID, i+1,0))
 
         con.close()
 
@@ -93,11 +93,11 @@ class Table:
         sub.LabCount = lab_count
         sc.Update(sub)
 
-        if((last_lc - lab_count) > 0):
-            for i in range(last_lc + 1, lab_count):
+        if((int(last_lc) - int(lab_count)) < 0):
+            for i in range(int(last_lc) + 1, int(lab_count)+1):
                 lc.Add(Lab(1, sub.SubID, i, 0))
         else:
-            for i in range(lab_count + 1, last_lc):
+            for i in range(int(lab_count)+1, int(last_lc)+1):
                 lab = lc.Get_by_Name(i, sub.SubID)
                 lc.Delete(lab.LabID)
 
