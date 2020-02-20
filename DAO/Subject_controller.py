@@ -1,5 +1,4 @@
 from Objects.Subject import Subject
-import mysql.connector
 
 class Subject_controller:
     def __init__(self, con):

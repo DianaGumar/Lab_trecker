@@ -1,5 +1,4 @@
 from Objects.Lab import Lab
-import mysql.connector
 
 class Lab_controller:
     def __init__(self, con):
