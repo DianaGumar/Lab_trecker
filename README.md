@@ -33,7 +33,7 @@ Change lab count:
 - reload application.
 
 
-### Dependences
+# Dependences
 Project use MySql database and pyQt5.
 Download [mysql.connector](https://dev.mysql.com/downloads/connector/python/) and PyQt5 whels. Or ran next lines:
 ```sh
