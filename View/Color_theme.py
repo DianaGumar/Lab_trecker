@@ -1,6 +1,6 @@
 
 class Color_theme_wb:
-    opacity_black = 0.8
+    opacity_black = 0.7
     opacity_white = 0.9
     background_white =  "white"
     background_black =  "black"

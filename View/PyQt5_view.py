@@ -14,7 +14,34 @@ from View.Color_theme import Color_theme_wb
 class PyQt5_view(QWidget):
     def __init__(self, parent=None):
         super(QWidget, self).__init__(parent)
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.SplashScreen | Qt.WindowStaysOnTopHint)
+        # Qt.WindowStaysOnBottomHint
+        # self.setAttribute(Qt.WA_TranslucentBackground)
+
+
+        self.setWindowIcon(QIcon(self.resource_path("Icon.ico")))
+        # self.setWindowIcon(QIcon("Icon.ico"))
+
+        # Инициализируем QSystemTrayIcon
+        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon.setIcon(QIcon(self.resource_path("Icon.ico")))
+        # self.tray_icon.setIcon(QIcon("Icon.ico"))
+        # self.tray_icon.setIcon(self.style().standardIcon(QStyle.SP_ComputerIcon))
+
+        show_action = QAction("Show", self)
+        quit_action = QAction("Exit", self)
+        hide_action = QAction("Hide", self)
+        show_action.triggered.connect(self.show)
+        hide_action.triggered.connect(self.hide)
+        quit_action.triggered.connect(qApp.quit)
+        tray_menu = QMenu()
+        tray_menu.addAction(show_action)
+        tray_menu.addAction(hide_action)
+        tray_menu.addAction(quit_action)
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.show()
+
+
 
         # установить тему приложения: 0 - dark; 1 - white
         self.theme_init(0)
@@ -54,7 +81,7 @@ class PyQt5_view(QWidget):
 
 
         self.qle = QPushButton("X", self)
-        self.qle.move(465, 199)
+        self.qle.move(465, 200)
         self.qle.clicked.connect(self.close)
         self.qle.setFont(QFont('Ralleway', 14))
         self.qle.setStyleSheet(
@@ -108,7 +135,7 @@ class PyQt5_view(QWidget):
 
 
         self.add_button = QPushButton("Add", self)
-        self.add_button.move(355, 199)
+        self.add_button.move(355, 200)
         self.add_button.clicked.connect(self.ok_button)
         self.add_button.setFont(QFont('Ralleway', 12))
         self.add_button.setStyleSheet(
@@ -116,7 +143,7 @@ class PyQt5_view(QWidget):
             "max-width: 40px; " + strs_font )
 
         self.add_button = QPushButton("Del", self)
-        self.add_button.move(396, 199)
+        self.add_button.move(396, 200)
         self.add_button.clicked.connect(self.dell_button)
         self.add_button.setFont(QFont('Ralleway', 12))
         self.add_button.setStyleSheet(
@@ -271,6 +298,28 @@ class PyQt5_view(QWidget):
         if e.key() == Qt.Key_Control:
             self.ctrl_press = False
 
+    def closeEvent(self, event):
+        event.ignore()
+        self.hide()
+
+#     def resource_path(self, relative_path):
+#         if hasattr(sys, '_MEIPASS'):
+#             return os.path.join(sys._MEIPASS, relative_path)
+#         return os.path.join(os.path.abspath("."), relative_path)
+#
+#
+# def resource_path(relative):
+#     return os.path.join(
+#         os.environ.get(
+#             "_MEIPASS2",
+#             os.path.abspath(".")
+#         ),
+#         relative
+#     )
+
+    def resource_path(self, relative_path):
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
 
 # def resource_path(relative_path):
 #     try:
@@ -278,6 +327,8 @@ class PyQt5_view(QWidget):
 #     except Exception:
 #         base_path = os.path.abspath(".")
 #     return os.path.join(base_path, relative_path)
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

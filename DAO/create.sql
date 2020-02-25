@@ -21,11 +21,6 @@ alter table Labs add foreign key (SubjectID)
 	references Subjects (SubjectID) on delete cascade;
     
 
-insert into Subjects (SubjectName, LabCount)
-values ('VSRPP', 5),
-	   ('Mobile_gudjets', 7),
-	   ('3DMax', 6),
-	   ('Game_platform', 5);
        
        
        
